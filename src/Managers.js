@@ -34,7 +34,7 @@ export class ProductManager{
             await fs.writeFile(this.path, '[]');
             return []
 
-            console.log(`no se puede leer el archivo ${error.message}`)
+           
             
         }
     }
@@ -89,9 +89,9 @@ export class ProductManager{
 
     }
 
-    async deleteProduct(id) {
-        try {
-          await this.readProductsFromFile();
+    deleteProduct(id) {
+        
+          this.readProductsFromFile();
 
           //const index = this.products.findIndex((product) => product.id === id);
           const product = this.products.find((product) => product.id === id);
@@ -101,17 +101,13 @@ export class ProductManager{
 
             this.products= this.products.filter((prod) => prod.id !== id)
 
-            await this.saveProductFiles();
+            this.saveProductFiles();
             return true;
           }
           return false;
 
-        } 
+        
 
-        catch (error)
-        {
-          throw new Error(`No se puede eliminar el producto : ${error.message}`);
-        }
       }
 
 
@@ -144,6 +140,7 @@ export class ProductManager{
 
     getProductById (id)
     {
+        const products = this.readProductsFromFile()
         //Busco si el producto existe con el id y si existe me lo devuele sino me tira error
        const product= this.products.find((product)=> product.id ===id);
 
@@ -152,7 +149,7 @@ export class ProductManager{
         return product
        }else
        {
-        console.error ('Not found')
+        console.error ('Product not found')
        }
 
     }
@@ -161,7 +158,128 @@ export class ProductManager{
 
 }
 
-const productManager = new ProductManager ();
+
+export class CartManager {
+    constructor() {
+      this.carts = [];
+      this.idAuto = 0;
+      this.path= 'carts.json'
+      this.productsPath='Productos.json'
+    }
+  
+    createCart() {
+      const newCart = { id: ++this.idAuto, products: [] };
+      this.carts.push(newCart);
+      this.saveCartFiles ()
+      return newCart;
+    }
+
+
+    async saveCartFiles ()
+    {
+        // Creo el archivo JSON y stringifeo la info del array products 
+
+        
+        //this.readProductsFromFile()
+        try 
+        {
+            
+            fs.writeFile (this.path, JSON.stringify(this.carts))
+        } 
+        catch (error)
+        {
+            console.log(`No puede crearse el archivo: ${error.message}`)
+           
+        }
+    }
+  
+    getCartById(cartId) {
+        const carts= this.carts.find((cart)=> cart.id ===cartId);
+
+        if( carts)
+        {
+         return carts
+        }else
+        {
+         console.error ('Not found')
+        }
+    }
+  
+  }
+
+  const productManager = new ProductManager ();
+
+// let producto1 = {
+//     title:"Cerámica gris carrara", 
+//     description:"Caja de 25 cerámicas de 25x25", 
+//     price: 1345, 
+//     thumnail:"ruta/imagen1.jpg",
+//     category:'Solados',
+//     code: "CE-01",
+//     status:'true',
+//     stock: 100};
+
+// let producto2 = {
+//     title:"Perfil IPN 80", 
+//     description:"Perfil IPN 80 de 12m de largo",
+//     price:17845, 
+//     thumbnail:"ruta/imagen2.jpg", 
+//     category:'Perfiles de acero',
+//     code:"PR-E-01", 
+//     status:'true',
+//     stock:107};
+
+// let producto3 = {
+//     title:"Sillas Tulip", 
+//     description:"2 Sillas Tipo Tullip",
+//     price: 18900, 
+//     thumbnail:"ruta/imagen3.jpg",
+//     category:'Mobiliario',
+//     code: "MO-SI-01",
+//     status:'true',
+//     stock: 37};
+
+
+    
+
+
+// //Agrego los productos
+// productManager.addProduct(producto1);
+// productManager.addProduct(producto2);
+// productManager.addProduct(producto3);
+
+// //Obtengo los producto
+// productManager.getProducts();
+
+// //Obtengo los productos por id
+//console.log(productManager.getProductById(2))
 
 // //Creo el archivo JSON 
-productManager.saveProductFiles();
+//productManager.saveProductFiles();
+
+
+// producto3 = {
+//     title:"Sillas Tolix", 
+//     description:"2 Sillas metálicas tipo Tolix",
+//     price: 18900, 
+//     thumbnail:"ruta/imagen3.jpg",
+//     category:'Mobiliario',
+//     code: "MO-SI-02",
+//     status:'true',
+//     stock: 37};
+
+// productManager.updateProducts(3,producto3);
+
+//const cartManager = new CartManager ();
+
+//console.log(cartManager.createCart()); //Anda
+//console.log(cartManager.getCartById(1));//Anda;
+//console.log(productManager.getProducts())//anda
+
+//console.log(productManager.getProductById(2))//anda
+//cartManager.addProductToCart(1,2);
+
+
+//cartManager.removeProductFromCart(1,2)
+
+//cartManager.createCart(); //Anda

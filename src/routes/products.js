@@ -1,10 +1,10 @@
-import {ProductManager} from '../productManager.js';
+import {ProductManager} from '../Managers.js';
 import express from 'express'
-import uploader from '../utils.js'
+import uploader from '../utils/multer.js'
 
 
 const app = express();
-const router = express.Router(); 
+const routerProduct = express.Router(); 
 app.use(express.urlencoded({extended:true}))
 
 const productManager = new ProductManager ();
@@ -14,13 +14,12 @@ const productManager = new ProductManager ();
   await productManager.readProductsFromFile();
 })();
 
-router.get('/', (req, res) =>
+routerProduct.get('/', (req, res) =>
   {
     const products =productManager.getProducts()
-    //const cantidadValores =parseInt(req.query.limit);
+ 
     const limit = parseInt(req.query.limit)
-    //console.log(cantidadValores) //no me lo define
-  
+
     if( Number.isNaN(limit) || limit >= products.length) 
     {
       return res.send (products)
@@ -28,18 +27,18 @@ router.get('/', (req, res) =>
     else
     {
       let productosFiltrados = products.slice(0,limit)
-      res.send(productosFiltrados)
+      res.status(200).send(productosFiltrados)
     }
 });
 
 
-router.get('/:id', (req, res) => 
+routerProduct.get('/:id', (req, res) => 
 {
   const id = parseInt(req.params.id);
   const product = productManager.getProductById(id);
   if (product) 
   {
-    res.send(product);
+    res.status(200).send(product);
   } 
   else 
   {
@@ -48,20 +47,26 @@ router.get('/:id', (req, res) =>
 });
 
 
-// router.post('/', (req, res) => {
 
-//   const productData = req.body;
-//   console.log(productData)
-//   try {
-//     const product = productManager.addProduct(productData);
-//     const products =productManager.getProducts()
-//     res.status(201).json(products);
-//   } catch (error) {
-//     res.status(400).send({ error: error.message });
-//   }
-// });
 
-router.post('/',async (req,res)=>
+routerProduct.post('/imagen/:pid', uploader.single('file'), (req,res) =>
+{
+  const products = productManager.getProducts()
+  const productId= parseInt(req.params.pid);
+  const product = productManager.getProductById(productId);
+
+  if(!req.file)
+  {
+    res.status(400).send({ status: 'error', error: "No se pudo guardar la imagen." });
+  }
+  const path= req.file.path
+  product.thumbnail=path
+
+  productManager.saveProductFiles();
+  res.send({ status: 'success', message: 'Thumbnail created' })
+})
+
+routerProduct.post('/',async (req,res)=>
 {
     //const productsArchivo = productManager.readProductsFromFile ()
     const products =productManager.getProducts()
@@ -69,6 +74,7 @@ router.post('/',async (req,res)=>
     const requiredFields = ['title', 'description', 'code', 'price', 'stock', 'category'];
     const missingFields = requiredFields.filter((field) => !newProduct[field]);
 
+    
     if (missingFields.length > 0) 
     {
       return res.status(400).json({ error: `Faltan los siguientes campos obligatorios: ${missingFields}` });  
@@ -83,10 +89,10 @@ router.post('/',async (req,res)=>
     products[index].id = productId
     //products.push(newProduct) //Con esto hace el 4
     await productManager.saveProductFiles();
-    res.status(201).json( products );
+    res.status(200).json( products );
 })
 
-router.put('/:pid', (req,res)=>
+routerProduct.put('/:pid', (req,res)=>
 {
   const products =productManager.getProducts()
   const productId= parseInt(req.params.pid)
@@ -101,7 +107,7 @@ router.put('/:pid', (req,res)=>
       return;
     }
     
-    res.status(201).json({productToUpdate, products });
+    res.status(200).json({productToUpdate, products });
   }
   catch(error)
   {
@@ -110,13 +116,10 @@ router.put('/:pid', (req,res)=>
 })
   
 
-router.delete('/:pid',(req,res)=>
+routerProduct.delete('/:pid',(req,res)=>
 {
-  const products= productManager.getProducts()
   const id= parseInt(req.params.pid)
 
-  try 
-  {
     const deletedProduct= productManager.deleteProduct(id);
 
     if( !deletedProduct)
@@ -125,12 +128,9 @@ router.delete('/:pid',(req,res)=>
       return;
     }
     
-    res.json(`Producto eliminado id: ${id}`);
-  }
-  catch(error)
-  {
-    res.status(400).send({ error: error.message });
-  }
+    res.status(200).json(`Producto eliminado id: ${id}`);
+  
+
 })
 
-  export default router
+  export default routerProduct
