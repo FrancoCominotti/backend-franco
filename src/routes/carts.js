@@ -1,6 +1,8 @@
-import {CartManager,ProductManager} from '../Managers.js';
+import {ProductManager,CartManager} from '../dao/fileSystem/Managers.js';
 import express from 'express'
 import uploader from '../utils/multer.js'
+import { cartModel } from '../dao/models/cartsModels.js';
+import { productsModel } from '../dao/models/productsModels.js';
 
 const app = express();
 const routerCart = express.Router(); 
@@ -10,6 +12,131 @@ const cartManager = new CartManager();
 const productManager = new ProductManager();
 
 
+//  **********************************Mongo DataBase*************************************************//
+//Crear un carrito vacio
+routerCart.post('/',async (req,res)=>{
+
+  let products = []
+  const carts = await cartModel.create({
+    products
+  })
+  res.status(200).json( carts);
+});
+
+//Buscar todos los carritos
+routerCart.get('/', async (req,res)=>{
+  try{
+    let carts = await cartModel.find();
+    //res.send({result:'seccess',payload:products});
+    res.status(200).send(carts)
+ }
+ catch (e)
+ {
+    console.log(`cannot get users with mongoose ${e}`)
+ }
+
+});
+//Buscar un carrito
+routerCart.get('/:cid', async (req,res)=>{
+  let {cid}= req.params
+  try{
+    let cart = await cartModel.find({_id:cid});
+    //res.send({result:'seccess',payload:products});
+    res.status(200).send(cart)
+ }
+ catch (e)
+ {
+    console.log(`cannot get users with mongoose ${e}`)
+ }
+
+});
+
+
+//Agregar productos aun carrito existente
+routerCart.post('/:cid/product/:pid', async (req, res) =>{
+  const {cid, pid} = req.params;
+
+  const cart = await cartModel.find({_id:cid});
+  if (cart.length === 0) {
+    return res.status(404).send({ message: 'Cart not found' });
+  }
+
+  const product = await productsModel.findOne({ _id: pid });
+  if (!product) {
+    return res.status(404).send({ message: 'Product not found' });
+  }
+
+  const productInCarts = await cartModel.findOne({ _id: cid, "products._id": pid });
+
+  if (productInCarts) {
+
+    const result = await cartModel.updateOne(
+      {_id:cid,"products._id":pid},
+      {$inc:{"products.$.quantity":1}});
+  } else {
+    const result = await cartModel.updateOne(
+      {_id:cid},
+      {$push:{products: {_id:pid,quantity:1}}})
+  }
+
+  res.status(200).send({ message: 'Product added to cart', cart});
+});
+
+
+
+//Eliminar un producto existente
+routerCart.delete('/:cid/product/:pid', async (req, res) =>{
+  const {cid, pid} = req.params;
+
+
+  const cart = await cartModel.find({_id:cid});
+  if (cart.length === 0) {
+    return res.status(404).send({ message: 'Cart not found' });
+  }
+
+  const product = await productsModel.findOne({ _id: pid });
+  if (!product) {
+    return res.status(404).send({ message: 'Product not found' });
+  }
+
+  const productInCarts = await cartModel.findOne({ _id: cid, "products._id": pid });
+
+  if(productInCarts){
+  const updatedCart = await cartModel.findOneAndUpdate(
+    { 
+      _id: cid,
+      products: { $elemMatch: { _id: pid, quantity: { $gt: 1 } } }
+    },
+    { $inc: { "products.$.quantity": -1 } }
+  );
+  
+  if (!updatedCart) {
+    // Si updatedCart es null, significa que no se encontró un documento que cumpla los criterios de búsqueda
+    await cartModel.updateOne(
+    {_id:cid},
+    {$pull:{products: {_id:pid,quantity:1}}})
+  } 
+  }else{
+    return res.status(404).send({ message: 'product does not exist in cart' });
+  }
+
+  res.status(200).send({ message: 'Product removed from carts', cart});
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  **********************************FileSystem*************************************************//
 routerCart.post('/', (req, res) => {
   
   const carts = cartManager.createCart();
