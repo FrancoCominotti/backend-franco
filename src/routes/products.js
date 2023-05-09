@@ -1,4 +1,4 @@
-import {ProductManager} from '../dao/fileSystem/Managers.js';
+import {ProductManager} from '../dao/fileSystem/models/Managers.js';
 import express from 'express'
 import uploader from '../utils/multer.js'
 import { productsModel } from '../dao/models/productsModels.js';
