@@ -39,9 +39,11 @@ const socket = io();
 socket.emit ('message', 'Nuevo cliente conectado');
 {/*
  socket.on('productosActualizados', (products) => {
+
         // Actualizar la vista con JavaScript
         const productsList = document.getElementById('productos');
         productsList.innerHTML = '';
+
         products.forEach((product) => {
           const li = document.createElement('li');
           li.innerText = `${product.title} - ${product.price}`;
@@ -49,27 +51,45 @@ socket.emit ('message', 'Nuevo cliente conectado');
         });
   });
   */}
+
   socket.on('soloUnUsuario', data =>{
     console.log(data)
   })
+
   socket.on('mensajeTodos',data =>{
     console.log(data)
   });
+
     socket.on('mensajeTodosMenosSocketActual',data =>{
     console.log(data)
   });
+
     const productList = document.getElementById('productList');
     const form = document.getElementById('myForm');
+
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
+
+
       const productInput = document.getElementById('product').value;
       const priceInput = document.getElementById("price").value;
+
       
       const product = productInput.value;
       const price = priceInput.value;
+
       const listItem = document.createElement('li');
       listItem.textContent = `${product} - ${priceInput}`;
       productList.appendChild(listItem);
+
+
       socket.emit('chatRoom1', `Producto agregado ${productInput} ${priceInput}`);
+
+
+
     });
+
+
+
 </script>

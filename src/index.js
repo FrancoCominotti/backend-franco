@@ -6,13 +6,13 @@ import handlebars from 'express-handlebars';
 import __dirname from './utils/handlebars.js';
 import {Server} from 'socket.io';
 import mongoose from "mongoose";
-import { messageModel } from './dao/models/messagesModels.js';
+import { messageModel } from './models/messagesModels.js';
 import MongoStore from 'connect-mongo';
 import routerSessions from './routes/sessions.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import passport from 'passport'
-import initializePassport from './config/passport.config.js'
+import userRouter from './routes/userRouter.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 
 const app = express();
@@ -66,12 +66,12 @@ app.use(express.json());
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/sessions', routerSessions);
+app.use('/api/user',userRouter);
+app.use(errorHandler)
 //app.use('/api/session', routerSession);
 
-//Passport
-initializePassport();
-app.use(passport.initialize());
-app.use(passport.session())
+
+
 
 
 //******PARA EL CHAT ***** */

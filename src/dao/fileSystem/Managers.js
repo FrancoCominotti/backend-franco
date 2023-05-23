@@ -1,3 +1,10 @@
+// const { readFileSync, read } = require('fs');
+// const { json } = require('stream/consumers');
+
+
+// const fs = require('fs').promises
+
+
 import { readFileSync } from 'fs';
 import { json } from 'stream/consumers';
 import fs from 'fs/promises';
@@ -201,3 +208,78 @@ export class CartManager {
   }
 
   const productManager = new ProductManager ();
+
+// let producto1 = {
+//     title:"Cerámica gris carrara", 
+//     description:"Caja de 25 cerámicas de 25x25", 
+//     price: 1345, 
+//     thumnail:"ruta/imagen1.jpg",
+//     category:'Solados',
+//     code: "CE-01",
+//     status:'true',
+//     stock: 100};
+
+// let producto2 = {
+//     title:"Perfil IPN 80", 
+//     description:"Perfil IPN 80 de 12m de largo",
+//     price:17845, 
+//     thumbnail:"ruta/imagen2.jpg", 
+//     category:'Perfiles de acero',
+//     code:"PR-E-01", 
+//     status:'true',
+//     stock:107};
+
+// let producto3 = {
+//     title:"Sillas Tulip", 
+//     description:"2 Sillas Tipo Tullip",
+//     price: 18900, 
+//     thumbnail:"ruta/imagen3.jpg",
+//     category:'Mobiliario',
+//     code: "MO-SI-01",
+//     status:'true',
+//     stock: 37};
+
+
+    
+
+
+// //Agrego los productos
+// productManager.addProduct(producto1);
+// productManager.addProduct(producto2);
+// productManager.addProduct(producto3);
+
+// //Obtengo los producto
+// productManager.getProducts();
+
+// //Obtengo los productos por id
+//console.log(productManager.getProductById(2))
+
+// //Creo el archivo JSON 
+//productManager.saveProductFiles();
+
+
+// producto3 = {
+//     title:"Sillas Tolix", 
+//     description:"2 Sillas metálicas tipo Tolix",
+//     price: 18900, 
+//     thumbnail:"ruta/imagen3.jpg",
+//     category:'Mobiliario',
+//     code: "MO-SI-02",
+//     status:'true',
+//     stock: 37};
+
+// productManager.updateProducts(3,producto3);
+
+//const cartManager = new CartManager ();
+
+//console.log(cartManager.createCart()); //Anda
+//console.log(cartManager.getCartById(1));//Anda;
+//console.log(productManager.getProducts())//anda
+
+//console.log(productManager.getProductById(2))//anda
+//cartManager.addProductToCart(1,2);
+
+
+//cartManager.removeProductFromCart(1,2)
+
+//cartManager.createCart(); //Anda

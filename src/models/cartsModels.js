@@ -1,17 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
 const cartsCollection = 'carts';
 
 const cartsSchema = new mongoose.Schema({
-    //Propiedades que querramos que tenga el usuario en nuestra base de datos
-
-    //******ANDA CON ESTO ******/
-    // products: [{
-    //     quantity: { type: Number,required: true}
-    //   }]
 
 
-    //*****PREUBA POPULATE *******/
+
+    //courses: [{ type: Schema.Types.ObjectId, index: true, ref: 'products', default: [] }],
     products:{
       type:[
           {
@@ -26,11 +21,12 @@ const cartsSchema = new mongoose.Schema({
   }
 });
 
-// cartsSchema.pre('find', function (){
-//     this.populate('products.product');
-// })
+cartsSchema.pre('find', function (){
+    this.populate(['products']);
+})
 
 
 //Con mongoose model generamos el modelo funcional de usuarios conectados a la base de datos , la parte del cuerpo es el userSchema, pero el userModel refiere a la parte funcional
+const cartModel = mongoose.model(cartsCollection,cartsSchema);
 
-export const cartModel = mongoose.model(cartsCollection,cartsSchema);
+export default cartModel
