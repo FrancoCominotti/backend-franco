@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 const PrivateKey = 'CoderTokenFP';
 const auth = (req, res, next) =>
 {
-    const a= []
     const authHeader = req.headers.authorization;
 
     if (!authHeader)
@@ -13,7 +12,7 @@ const auth = (req, res, next) =>
 
     const token = authHeader.split(' ')[1]; // Bearer tokenString
 
-    jwt.verify(token, PrivateKey, (error, credentials) =>{
+    jwt.verify(token, process.env.PRIVATE_KEY, (error, credentials) =>{
        if(error) return res.status(403).send({ error: 'Authentication error'});
 
        req.user = credentials.user;

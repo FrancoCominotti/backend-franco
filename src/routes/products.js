@@ -16,7 +16,7 @@ routerProduct.get('/:id',getOne)
 routerProduct.post('/',save)
 routerProduct.put('/:id',update)
 routerProduct.delete('/:id',deleteOne)
-//routerProduct.put('/imagen/:id',uploader.single('file') ,addImage);
+//routerProduct.put('/imagen/:id',uploader.single('file') ,addImageById);
 
 
 // //  **********************************Mongo DataBase*************************************************//

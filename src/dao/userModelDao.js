@@ -14,7 +14,8 @@ class UserMongooseDao
       firstName: document.firstName,
       lastName: document.lastName,
       email: document.email,
-      age: document.age
+      age: document.age,
+      isAdmin: document.isAdmin,
     }));
 
     return userDocuments;
@@ -26,7 +27,7 @@ class UserMongooseDao
 
     if(!userDocument)
     {
-      throw new Error('User doesnt exist.');
+      throw new Error('User Not Found');
     }
 
     return {
@@ -35,7 +36,10 @@ class UserMongooseDao
         lastName: userDocument?.lastName,
         email: userDocument?.email,
         age: userDocument?.age,
-        password: userDocument?.password
+        password: userDocument?.password,
+        isAdmin: userDocument.isAdmin,
+        role: userDocument.role,
+        cart:userDocument.cart,
     }
   }
 
@@ -43,10 +47,6 @@ class UserMongooseDao
   {
     const userDocument = await userModel.findOne({ email });
 
-    // if(!userDocument)
-    // {
-    //   throw new Error('User dont exist.');
-    // }
 
     return {
         id: userDocument?._id,
@@ -54,22 +54,28 @@ class UserMongooseDao
         lastName: userDocument?.lastName,
         email: userDocument?.email,
         age: userDocument?.age,
-        password: userDocument?.password
+        password: userDocument?.password,
+        isAdmin: userDocument?.isAdmin,
+        role: userDocument.role,
+        cart:userDocument.cart,
     }
   }
 
   async create(data)
   {
-    const { firstName, lastName, email, age, password } = data;
-    const hashedPassword = await createHash(password);
-    const userDocument = await userModel.create({
-        firstName,
-        lastName,
-        email,
-        age,
-        password: hashedPassword,
-      });
-    
+    const userDocument = await userModel.create(data);
+
+    //const hashedPassword = await createHash(password);
+    // const userDocument = await userModel.create({
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     age,
+    //     password: hashedPassword,
+    //     isAdmin
+    //   });
+
+  
 
     return {
         id: userDocument._id,
@@ -78,6 +84,7 @@ class UserMongooseDao
         email: userDocument.email,
         age: userDocument.age,
         password: userDocument.password,
+        isAdmin:userDocument.isAdmin
     }
   }
 
@@ -87,7 +94,7 @@ class UserMongooseDao
 
     if(!userDocument)
     {
-      throw new Error('User dont exist.');
+      throw new Error('User Not Found');
     }
 
     return {
@@ -95,7 +102,27 @@ class UserMongooseDao
         firstName: userDocument.firstName,
         lastName: userDocument.lastName,
         email: userDocument.email,
-        age: userDocument.age
+        age: userDocument.age,
+        isAdmin: userDocument?.isAdmin,
+        cart: userDocument?.cart,
+    }
+  }
+
+
+  async addCart(id, cartId)
+  {
+    const userDocument = await userModel.findOneAndUpdate(
+      { _id: id },{ cart: cartId  },
+      { new: true }
+    );
+
+    if(!userDocument)
+    {
+      throw new Error('User Not Found');
+    }
+
+    return {
+        cart: userDocument.cart,
     }
   }
 

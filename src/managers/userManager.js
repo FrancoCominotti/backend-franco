@@ -1,4 +1,7 @@
 import UserMongooseDao from "../dao/userModelDao.js";
+import idValidation from '../validations/share/idValidation.js';
+import userCreateValidation from '../validations/users/userCreateValidation.js'
+import userUpdateValidation from '../validations/users/userUpdateValidation.js'
 
 class UserManager
 {
@@ -19,11 +22,14 @@ class UserManager
 
   async getOne(id)
   {
+    await idValidation.parseAsync({ id });
     return this.userDao.getOne(id);
   }
 
   async create(data)
   {
+    await userCreateValidation.parseAsync(data)
+    
     const user = await this.userDao.create(data);
 
     return { ...user, password: undefined };
@@ -31,11 +37,18 @@ class UserManager
 
   async updateOne(id, data)
   {
+    await userUpdateValidation.parseAsync({ ...data, id });
     return this.userDao.updateOne(id, data);
+  }
+
+  async addCart(id, data)
+  {
+    return this.userDao.addCart(id, data);
   }
 
   async deleteOne(id)
   {
+    await idValidation.parseAsync({ id });
     return this.userDao.deleteOne(id);
   }
 

@@ -17,7 +17,7 @@ class CartMongooseDao {
         const cartDocument= await cartModel.findOne({_id:id}).populate('products._id')
 
         if( !cartDocument){
-            throw new Error ("Cart doesn't exist")
+            throw new Error ("Cart Not Found")
         }
 
         return{
@@ -45,7 +45,7 @@ class CartMongooseDao {
 
 
         if(!cartDocument){
-            throw new Error ("cart doesn't exist")
+            throw new Error ("Cart Not Found")
         }
         
         return{
@@ -61,7 +61,7 @@ class CartMongooseDao {
         const cartDocument = await cartModel.findOneAndUpdate ({_id:id},data,{new:true});
 
         if(!cartDocument){
-            throw new Error ("cart doesn't exist")
+            throw new Error ("cart Not Found")
         }
 
         return{

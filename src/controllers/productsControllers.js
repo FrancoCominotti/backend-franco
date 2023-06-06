@@ -1,7 +1,6 @@
 import ProductManager from "../managers/productsManager.js";
 import uploader from "../middlewares/multer.js";
-import idValidation from "../validations/idValidation.js";
-import productUpdateValidation from "../validations/productUpdateValidation.js";
+
 
 class ProductController
 {
@@ -20,8 +19,6 @@ export const getOne= async (req,res,next) =>{
     try
     {
     
-    await idValidation.parseAsync(req.params);
-    
     const {id} = req.params;
 
     const manager = new ProductManager();
@@ -37,12 +34,20 @@ export const getOne= async (req,res,next) =>{
 
 }
 
-export const save = async (req,res) =>{
+export const save = async (req,res,next) =>{
+
+    try{
+
     const manager = new ProductManager();
 
     const product = await manager.create(req.body);
 
     res.send ({status:'succeed',product, message:'Product created'});
+    }
+    catch (e)
+    {
+        next(e)
+    }
 }
 
 
@@ -50,8 +55,6 @@ export const update = async ( req,res,next)=>{
 
     try 
     {
-        await productUpdateValidation.parseAsync({...req.params,...req.body});
-
         const {id} = req.params
 
         const manager = new ProductManager();
@@ -71,7 +74,6 @@ export const deleteOne = async (req,res,next) =>{
 
     try
     {
-    await idValidation.parseAsync(req.params);
 
     const {id} = req.params
 
@@ -87,14 +89,16 @@ export const deleteOne = async (req,res,next) =>{
     }
 }
 
-// export const addImage = async (req,res)=>
+// export const addImageById = async (req,res)=>
 // {
 
-//     const {id} = req.params
+//     const {id} = req.params;
+
+//     const file = req.file;
 
 //     const manager = new ProductManager();
 
-//     const result = await manager.addImage(id,'aaa') ;
+//     const result = await manager.addImageById(id,'aaa') ;
 
     
 // }

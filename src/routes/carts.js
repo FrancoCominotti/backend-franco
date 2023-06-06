@@ -4,6 +4,8 @@ import uploader from '../utils/multer.js'
 // import { cartModel } from '../dao/models/cartsModels.js';
 // import { productsModel } from '../dao/models/productsModels.js';
 import CartController, { addProduct, createOne, deleteOne, deleteOneProduct, getOne, modifyQuantity, update, } from '../controllers/cartControllers.js';
+import auth from "../middlewares/auth.js";
+
 const app = express();
 const routerCart = express.Router(); 
 app.use(express.urlencoded({extended:true}))
@@ -13,7 +15,7 @@ const productManager = new ProductManager();
 
 routerCart.get('/',CartController.list);
 routerCart.get('/:id',getOne);
-routerCart.post('/',createOne);
+routerCart.post('/',auth,createOne);
 routerCart.post('/:cid/product/:pid',addProduct);
 routerCart.put('/:id',update)
 routerCart.put('/:cid/product/:pid',modifyQuantity);

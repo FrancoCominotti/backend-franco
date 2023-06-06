@@ -1,7 +1,7 @@
 import z from 'zod';
 
-const productUpdateValidation = z.object({
-  id: z.string().max(24),
+
+const productCreateValidation = z.object({
   title: z.string().min(1).max(35),
   description: z.string().min(10).max(35),
   price: z.number(),
@@ -10,4 +10,4 @@ const productUpdateValidation = z.object({
   stock:z.number()
 });
 
-export default productUpdateValidation;
+export default productCreateValidation;
