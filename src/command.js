@@ -1,10 +1,10 @@
 import { exit } from 'shelljs';
 import { program } from 'commander';
 import dotenv from 'dotenv';
-dotenv.config(); // Need before get config
+dotenv.config();
 
 import mongoose from "mongoose";
-import AddUser from "./commander/addUser.js";
+import AddUser from "./presentation/commander/addUser.js";
 
 void (async() =>
 {
