@@ -7,7 +7,7 @@ import UserMongooseRepository from "./data/repositories/mongoose/userMongooseRep
 import RoleMongooseRepository from "./data/repositories/mongoose/roleMongooseRepository.js";
 import ProductsMongooseRepository from './data/repositories/mongoose/productsMongooseRepository.js'
 import CartsMongooseRepository from './data/repositories/mongoose/cartsMongooseRepository.js';
-
+import TicketsMongooseRepository from './data/repositories/mongoose/ticketsMongooseRepository.js';
 const container = createContainer();
 
 if(process.env.DB === 'MongooseAdapter')
@@ -16,6 +16,7 @@ if(process.env.DB === 'MongooseAdapter')
   container.register('RoleRepository', asClass(RoleMongooseRepository), { lifetime: Lifetime.SINGLETON });
   container.register('ProductRepository', asClass(ProductsMongooseRepository), { lifetime: Lifetime.SINGLETON });
   container.register('CartRepository', asClass(CartsMongooseRepository), { lifetime: Lifetime.SINGLETON });
+  container.register('TicketRepository', asClass(TicketsMongooseRepository), { lifetime: Lifetime.SINGLETON });
 }
 else if(process.env.DB === 'FileAdapter')
 {

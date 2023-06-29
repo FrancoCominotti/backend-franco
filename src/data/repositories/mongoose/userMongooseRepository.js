@@ -46,8 +46,8 @@ class UserMongooseRepository
         userDocument?.email,
         userDocument?.age,
         userDocument.isAdmin,
+        userDocument.role,
         userDocument?.password,
-        userDocument.role
     );
   }
 

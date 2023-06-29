@@ -48,10 +48,8 @@ class CartManager{
       const cart = await this.cartRepository.getOne(cid);
       const product = await this.productRepository.getOne(pid);
 
-      const existingProduct = cart.products.find(p => p.id.equals(pid));
-
-      console.log(existingProduct)
-
+      const existingProduct = cart.products.find(p => p._id.equals(pid));
+   
       if (existingProduct) {
         existingProduct.quantity++;
       } else {

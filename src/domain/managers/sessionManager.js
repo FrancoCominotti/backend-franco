@@ -21,7 +21,6 @@ class SessionManager
 
     //const user = await this.userDao.getOneByEmail(email);
     const user = await this.userRepository.getOneByEmail(email);
-    console.log(user.password)
     const isHashedPassword = await isValidPassword(password, user.password);
 
     if (!isHashedPassword)

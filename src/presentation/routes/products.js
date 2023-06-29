@@ -3,6 +3,8 @@ import express from 'express'
 //import uploader from '../utils/multer.js'
 //import { productsModel } from '../dao/models/productsModels.js';
 import ProductController, { deleteOne, getOne, save, update } from '../controllers/productsControllers.js';
+import auth from "../middlewares/auth.js";
+import authorization from '../middlewares/authorizacion.js';
 import uploader from '../../shared/multer.js';
 
 const app = express();
@@ -12,9 +14,9 @@ app.use(express.urlencoded({extended:true}))
 
 routerProduct.get('/',ProductController.list);
 routerProduct.get('/:id',getOne)
-routerProduct.post('/',save)
-routerProduct.put('/:id',update)
-routerProduct.delete('/:id',deleteOne)
+routerProduct.post('/',auth, authorization('saveProduct'),save)
+routerProduct.put('/:id',auth, authorization('updateProduct'),update)
+routerProduct.delete('/:id',auth, authorization('deleteProduct'),deleteOne)
 //routerProduct.put('/imagen/:id',uploader.single('file') ,addImageById);
 
 

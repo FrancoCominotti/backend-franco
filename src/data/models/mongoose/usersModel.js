@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import paginate from "mongoose-paginate-v2";
-import { boolean } from 'zod';
+
 
 const userCollection = 'users Coder Project-2';
 
@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
       email: { type: Schema.Types.String, unique: true, required: true },
       age: { type: Schema.Types.Number, default: 18 },
       password: {type: Schema.Types.String,required: true},
-      role:{type:Schema.Types.ObjectId,index:true,ref:'roles'},
+      role:{type:Schema.Types.ObjectId,index:true,ref:'roles', default: "6494b9ec1405764b428f7a97"},
       isAdmin: { type: Schema.Types.Boolean, default: false },
       cart:{type:Schema.Types.ObjectId,index:true,ref:'carts'},
     });
