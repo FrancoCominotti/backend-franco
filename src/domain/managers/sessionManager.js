@@ -21,12 +21,19 @@ class SessionManager
 
     //const user = await this.userDao.getOneByEmail(email);
     const user = await this.userRepository.getOneByEmail(email);
+
+    if(!user.email)
+    {
+      throw new Error('User dont exist.');
+    }
+
     const isHashedPassword = await isValidPassword(password, user.password);
 
     if (!isHashedPassword)
     {
         throw new Error('Login failed, invalid password.');
     }
+
 
     return await generateToken(user);
   }

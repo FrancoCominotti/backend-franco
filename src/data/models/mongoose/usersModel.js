@@ -13,19 +13,19 @@ const userSchema = new mongoose.Schema({
       password: {type: Schema.Types.String,required: true},
       role:{type:Schema.Types.ObjectId,index:true,ref:'roles', default: "6494b9ec1405764b428f7a97"},
       isAdmin: { type: Schema.Types.Boolean, default: false },
-      cart:{type:Schema.Types.ObjectId,index:true,ref:'carts'},
+      //cart:{type:Schema.Types.ObjectId,index:true,ref:'carts'},
     });
 
 userSchema.plugin(paginate);
 
-userSchema.pre('find', function () {
-  this.populate(['role']);
-});
+// userSchema.pre('find', function () {
+//   this.populate(['role']);
+// });
 
-userSchema.pre('findOne', function () {
-  this.populate(['role'])
-  this.populate(['cart'])
-});
+// userSchema.pre('findOne', function () {
+//   this.populate(['role'])
+//   this.populate(['cart'])
+// });
 
 
 //Con mongoose model generamos el modelo funcional de usuarios conectados a la base de datos , la parte del cuerpo es el userSchema, pero el userModel refiere a la parte funcional

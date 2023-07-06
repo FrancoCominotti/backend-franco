@@ -2,17 +2,35 @@ import ProductManager from "../../domain/managers/productsManager.js";
 import uploader from "../middlewares/multer.js";
 
 
-class ProductController
+// class ProductController
+// {
+//     static list = async (req,res)=>{
+
+//         const manager = new ProductManager();
+
+//         const products = await manager.find();
+
+//         res.send ({status:'succeed',products})
+//     }
+// }
+
+
+export const list = async  (req, res, next) =>
 {
-    static list = async (req,res)=>{
+  try
+  {
+    const { limit, page } = req.query;
 
-        const manager = new ProductManager();
+    const manager = new ProductManager();
+    const product = await manager.paginate({ limit, page });
 
-        const products = await manager.find();
-
-        res.send ({status:'succeed',products})
-    }
-}
+    res.send({ status: 'success', product: product.docs, ...product, docs: undefined });
+  }
+  catch (e)
+  {
+		next(e);
+	}
+};
 
 export const getOne= async (req,res,next) =>{
 
@@ -103,4 +121,4 @@ export const deleteOne = async (req,res,next) =>{
     
 // }
 
-export default ProductController
+//export default ProductController

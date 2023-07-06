@@ -2,10 +2,17 @@ import productModel from "../../models/mongoose/productsModels.js";
 import Product from "../../../domain/entities/product.js";
 
 class ProductsMongooseRepository {
-  async find() {
-    const productsDocument = await productModel.find();
 
-    const products = productsDocument.map((document) => new Product({
+  async paginate(criteria) 
+  {
+
+    const { limit, page } = criteria;
+    const productsDocument = await productModel.paginate({}, { limit, page });
+    const { docs, ...pagination } = productsDocument;
+
+    //const productsDocument = await productModel.find();
+
+    const products = docs.map((document) => new Product({
       id: document._id,
       title: document.title,
       description: document.description,
@@ -17,7 +24,8 @@ class ProductsMongooseRepository {
     }));
 
     return {
-      products
+      products,
+      pagination
     };
   }
 

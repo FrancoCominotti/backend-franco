@@ -29,6 +29,12 @@ const errorHandler = (err, req, res, next) =>
       return res.status(401).send({ message: 'Not enough stock'})
   }
 
+  else if (err?.message.includes('dont exist'))
+  {
+      console.log(err.stack);
+      return res.status(404).send({ message: "User don't exist."});
+  }
+
 	console.log(err.stack);
 	res.status(500).json({ message: 'Ocurrió un error' });
 };

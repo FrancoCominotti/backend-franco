@@ -8,6 +8,7 @@ import RoleMongooseRepository from "./data/repositories/mongoose/roleMongooseRep
 import ProductsMongooseRepository from './data/repositories/mongoose/productsMongooseRepository.js'
 import CartsMongooseRepository from './data/repositories/mongoose/cartsMongooseRepository.js';
 import TicketsMongooseRepository from './data/repositories/mongoose/ticketsMongooseRepository.js';
+
 const container = createContainer();
 
 if(process.env.DB === 'MongooseAdapter')
@@ -24,3 +25,4 @@ else if(process.env.DB === 'FileAdapter')
 }
 
 export default container;
+

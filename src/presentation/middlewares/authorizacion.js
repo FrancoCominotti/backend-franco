@@ -4,18 +4,18 @@ const authorization = (permission) =>
     {
         const user = req.user;
 
-        // if(!user.isAdmin)
-        // {
-        //     return res.status(401).send({ message: 'Not authorization!'});
-        // }
+        if(!user.isAdmin)
+        {
+            return res.status(401).send({ message: 'Not authorization!'});
+        }
 
         // if (!user.isAdmin && !user.role?.permissions.includes(permission)) {
         //     return res.status(401).send({ message: 'Not authorization!' });
         // }
 
-        if (!user.role?.permissions.includes(permission)) {
-            return res.status(401).send({ message: 'Not authorization!' });
-        }
+        // if (!user.role?.permissions.includes(permission)) {
+        //     return res.status(401).send({ message: 'Not authorization!' });
+        // }
 
         next();
     }

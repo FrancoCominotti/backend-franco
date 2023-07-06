@@ -11,9 +11,9 @@ class ProductManager{
         this.productRepository = container.resolve('ProductRepository');
     }
 
-    async find()
+    async paginate(criteria)
     {
-        return this.productRepository.find()
+      return this.productRepository.paginate(criteria);
     }
 
     async getOne (id)
